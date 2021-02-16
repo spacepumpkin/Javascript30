@@ -7,8 +7,7 @@
 </head>
 <body>
 
-
-  <div class="keys">
+  <div id="keys">
     <div data-key="65" class="key">
       <kbd>A</kbd>
       <span class="sound">clap</span>
@@ -57,10 +56,31 @@
   <audio data-key="75" src="sounds/tom.wav"></audio>
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
-<script>
+  <script>
+    function playKey(evt) {
+      const audio = document.querySelector(`audio[data-key=\"${evt.keyCode}\"]`);
+      if (!audio) return; // avoids dealing with other keys
+      const key = document.querySelector(`div[data-key=\"${evt.keyCode}\"]`);
+      
+      key.classList.add("playing");
 
-</script>
+      audio.currentTime = 0; // rewind to start
+      audio.play();
+    }
+
+    function removeTransition(evt) {
+      // if (evt.propertyName !== "transform") return; // avoids other 5 events; removed so that we can hold key
+      if (evt.target.classList.contains("playing")) {
+        evt.target.classList.remove("playing");
+      }
+    }
+
+    window.addEventListener('keydown', playKey);
+    const keys = document.getElementById("keys");
+    keys.addEventListener("transitionend", removeTransition);
+  </script>
 
 
 </body>
+
 </html>
