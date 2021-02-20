@@ -93,14 +93,18 @@
       const seconds = now.getSeconds();
       const secondsDegrees = (seconds/60)*360 + 90;
       secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
-      
+      if (seconds === 59) secondHand.style.transitionTimingFunction = 'initial';
+
       const mins = now.getMinutes();
       const minsDegrees = (mins/60)*360 + seconds/10 + 90; // Also adjust based on seconds
       minHand.style.transform = `rotate(${minsDegrees}deg)`;
+      if (mins === 59) minHand.style.transitionTimingFunction = 'initial';
       
+
       const hours = now.getHours();
       const hoursDegrees = (hours/12)*360 + mins/2 + 90; // Also adjust based on minutes
       hourHand.style.transform = `rotate(${hoursDegrees}deg)`;
+      if (hours === 11) hourHand.style.transitionTimingFunction = 'initial';
 
       console.log(`${hours < 10 ? `0${hours}` : hours}:${mins < 10 ? `0${mins}` : mins}:${seconds < 10 ? `0${seconds}` : seconds}`);
     }
