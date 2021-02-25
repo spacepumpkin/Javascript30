@@ -62,12 +62,18 @@
   <script>
     const inputs = document.querySelectorAll('.controls input');
 
+    let inputClicked = false;
+
     function handleUpdate() {
-      console.log(this.value);
-      let property = this.id;
+      let property = this.name;
       let suffix = this.dataset.suffix || '';
-      console.log(property, `${this.value}${suffix}`);
-      document.documentElement.style.setProperty(`--${property}`, `${this.value}${suffix}`);
+      let newValue = `${this.value}${suffix}`;
+      let cssValue = getComputedStyle(document.documentElement).getPropertyValue(`--${property}`)
+      
+      if (newValue !== cssValue) {
+        // console.log(newValue, cssValue);
+        document.documentElement.style.setProperty(`--${property}`, newValue);
+      }
     }
 
     inputs.forEach(input => input.addEventListener('change', handleUpdate));
