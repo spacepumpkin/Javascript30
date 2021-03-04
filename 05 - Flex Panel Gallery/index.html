@@ -23,7 +23,7 @@
       box-sizing: inherit;
     }
 
-    .panels {
+    #panels {
       min-height: 100vh;
       overflow: hidden;
       display: flex;
@@ -65,7 +65,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      border: 1px solid red;
     }
 
     .panel p {
@@ -77,19 +76,22 @@
 
     .panel > *:first-child { transform: translateY(-100%); }
     .panel > *:last-child { transform: translateY(100%); }
-    
+    .panel.open-active > *:first-child { transform: translateY(0)}
+    .panel.open-active > *:last-child { transform: translateY(0)}
+
     .panel p:nth-child(2) {
       font-size: 4em;
     }
 
     .panel.open {
       font-size: 40px;
+      flex: 5;
     }
 
   </style>
 
 
-  <div class="panels">
+  <div id="panels">
     <div class="panel panel1">
       <p>Hey</p>
       <p>Let's</p>
@@ -118,10 +120,24 @@
   </div>
 
   <script>
+    const panels = document.querySelectorAll('.panel');
 
+    function toggleOpen() {
+      this.classList.toggle('open');
+    }
+
+    function toggleActive(e) {
+      console.log(e.propertyName);
+      if(e.propertyName.includes('flex')) { // Cross browser compatibility
+        e.target.classList.toggle('open-active');
+      }
+    }
+
+    // Expand panel when clicked
+    panels.forEach(panel => panel.addEventListener('click', toggleOpen));
+    // Transition text into panel after panel expansion
+    panels.forEach(panel => panel.addEventListener('transitionend', toggleActive));
   </script>
-
-
 
 </body>
 </html>
