@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Array Cardio 💪💪</title>
+</head>
+<body>
+  <p><em>Psst: have a look at the JavaScript Console</em> 💁</p>
+  <script>
+    // ## Array Cardio Day 2
+
+    const people = [
+      { name: 'Wes', year: 1988 },
+      { name: 'Kait', year: 1986 },
+      { name: 'Irv', year: 1970 },
+      { name: 'Lux', year: 2015 }
+    ];
+
+    const comments = [
+      { text: 'Love this!', id: 523423 },
+      { text: 'Super good', id: 823423 },
+      { text: 'You are the best', id: 2039842 },
+      { text: 'Ramen is my fav food ever', id: 123523 },
+      { text: 'Nice Nice Nice!', id: 542328 }
+    ];
+
+    // Some and Every Checks
+    // Array.prototype.some() // is at least one person 19 or older?
+    const isAnyoneAtLeastNineteen = people.some(person => (new Date().getFullYear() - person.year) >= 19);
+    console.log({isAnyoneAtLeastNineteen});
+    console.log(`Is at least one person 19 or older? ${isAnyoneAtLeastNineteen}`);
+    // Array.prototype.every() // is everyone 19 or older?
+    const isEveryoneAtLeastNineteen = people.every(person => (new Date().getFullYear() - person.year) >= 19);
+    console.log(`Is everyone 19 or older? ${isEveryoneAtLeastNineteen}`);
+
+    // Array.prototype.find()
+    // Find is like filter, but instead returns just the one you are looking for
+    // find the comment with the ID of 823423
+    const foundComment = comments.find(comment => comment.id === 823423);
+    console.log(`Comment with ID 823423: '${foundComment && foundComment.text}'`);
+
+    // Array.prototype.findIndex()
+    // Find the comment with this ID
+    // delete the comment with the ID of 823423
+    const foundCommentIndex = comments.findIndex(comment => comment.id === 823423);
+
+    // With Mutation:
+    // console.log('Comments before removing comment 823423:');
+    // console.table(comments);
+    // comments.splice(foundCommentIndex,1);
+    // console.log('Comments after removing comment 823423:');
+    // console.table(comments);
+
+    // Without Mutation:
+    console.log('Comments before removing comment 823423: ');
+    console.table(comments);
+    console.log('Comments after removing comment 823423: ');
+    console.table(comments.slice(0,foundCommentIndex).concat(comments.slice(foundCommentIndex+1)));
+
+  </script>
+</body>
+</html>
