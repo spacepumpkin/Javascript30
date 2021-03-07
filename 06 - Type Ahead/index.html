@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Type Ahead 👀</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
   <form class="search-form">
@@ -15,23 +17,49 @@
     </ul>
   </form>
 
-<script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
-const cities = [];
+  <script>
+    const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+    const cities = [];
 
-fetch(endpoint)
-.then(res => res.json())
-.then(res => cities.push(...res));
+    fetch(endpoint)
+      .then(payload => payload.json())
+      .then(payload => cities.push(...payload));
 
-function findMatches(wordToMatch, cities) {
-  return cities.filter(place => {
-    const regex = new RegExp(wordToMatch, 'gi'); // Flags: global, insensitive
-    return place.city.match(regex) || place.state.match(regex); // Check city and state name for a match
-  });
-}
+    function findMatches(wordToMatch, cities) {
+      return cities.filter(place => {
+        const regex = new RegExp(wordToMatch, 'gi'); // Flags: global, insensitive
+        return place.city.match(regex) || place.state.match(regex); // Check city and state name for a match
+      });
+    }
 
-console.log(cities);
+    function displayMatches(cities, results) {
+      return () => {
+        const matches = findMatches(this.value, cities);
+        results.innerHTML = matches.map(place => {
+          const regex = new RegExp(this.value, 'gi');
+          const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`);
+          const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
+          const populationString = parseInt(place.population, 10).toLocaleString(); // Works for different locales
+          // const populationString = place.population.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ","); // Insert comma between every 3 digits before a period
+          return `
+            <li>
+              <span class="name">${cityName}, ${stateName}</span>
+              <span class="population">${populationString}</span>
+            </li>
+          `;
+        }).join('');
+      };
+    }
 
-</script>
+    const searchInput = document.getElementsByClassName('search')[0];
+    const searchResults = document.getElementsByClassName('suggestions')[0];
+
+    displayMatches = displayMatches.bind(searchInput);
+    searchInput.addEventListener('input', displayMatches(cities, searchResults));
+
+    // console.log(cities);
+
+  </script>
 </body>
+
 </html>
