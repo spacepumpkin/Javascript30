@@ -14,21 +14,47 @@
   ctx.strokeStyle = '#BADA55';
   ctx.lineJoin = 'round';
   ctx.lineCap = 'round';
+  ctx.lineWidth = 50;
+  ctx.globalCompositeOperation = 'darken';
+  // Types: source-over (default), source-in, source-out, source-atop,
+  //    destination-over, destination-in, destination-out, destination-atop,
+  //    lighter, copy, xor, multiply, screen, overlay, darken, lighten, color-dodge, color-burn, 
+  //    hard-light, soft-light, difference, exclusion, hue, saturation, color, luminosity
 
   let isDrawing = false;
   let lastX = 0;
   let lastY = 0;
+  let hue = 0;
+  let direction = true; // increasing first
 
   function draw(evt) {
     if (!isDrawing) return;
-    console.log(evt);
-  }
+    // console.log(evt.offsetX, evt.offsetY);
+    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(evt.offsetX, evt.offsetY);
+    ctx.stroke();
+    [lastX, lastY] = [evt.offsetX, evt.offsetY];
+    hue = (hue + 1) % 360;
 
+    // Adjusts 
+    if (ctx.lineWidth > 50 || ctx.lineWidth < 25) direction = !direction;
+    if (direction) {
+      ctx.lineWidth++;
+    } else {
+      ctx.lineWidth--;
+    }
+  }
+  
+  canvas.addEventListener('mousedown', (evt) => {
+    isDrawing = true;
+    [lastX, lastY] = [evt.offsetX, evt.offsetY];
+  });
+  
   canvas.addEventListener('mousemove', draw);
-  canvas.addEventListener('mousedown', () => isDrawing = true);
   canvas.addEventListener('mouseup', () => isDrawing = false);
   canvas.addEventListener('mouseout', () => isDrawing = false);
-
 </script>
 
 <style>
