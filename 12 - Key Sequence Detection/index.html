@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Key Detection</title>
+  <script type="text/javascript" src="https://www.cornify.com/js/cornify.js"></script>
+</head>
+
+<body>
+  <script>
+
+    class Node {
+      constructor(value) {
+        this.value = value;
+        this.next = null;
+      }
+    }
+
+    class Queue {
+      constructor(maxSize) {
+        this.head = null;
+        this.tail = null;
+        this.size = 0;
+        this.maxSize = maxSize || 1;
+      }
+
+      enqueue(value) {
+        if (this.size >= this.maxSize) {
+          this.dequeue();
+          this.size--;
+        }
+        if (this.tail) {
+          this.tail.next = new Node(value);
+          this.tail = this.tail.next;
+        } else {
+          this.head = new Node(value);
+          this.tail = this.head;
+        }
+        this.size++;
+        return value;
+      }
+
+      dequeue() {
+        let frontValue = null;
+        if (this.head) {
+          frontValue = this.head.value;
+          if (this.head === this.tail) {
+            this.head = this.tail = null;
+          } else {
+            this.head = this.head.next;
+          }
+          return frontValue;
+        } else {
+          return null;
+        }
+      }
+
+      toArray() {
+        const array = [];
+        let curr = this.head;
+        while (curr) {
+          array.push(curr.value);
+          curr = curr.next;
+        }
+        return array;
+      }
+    }
+
+
+    const secretCode = 'UUDDLRLRba'; // konami code
+    const pressedKeys = new Queue(secretCode.length);
+
+    function recordKey(evt) {
+      const keyCode = evt.key;
+      const arrowKeys = {
+        'ArrowUp': 'U',
+        'ArrowDown': 'D',
+        'ArrowLeft': 'L',
+        'ArrowRight': 'R',
+      };
+
+      if (keyCode in arrowKeys) {
+        pressedKeys.enqueue(arrowKeys[keyCode]);
+      } else {
+        pressedKeys.enqueue(keyCode);
+      }
+      console.log(keyCode);
+    }
+
+    function checkKeyPresses() {
+      const sequence = pressedKeys.toArray().join('');
+      if (sequence === secretCode) {
+        console.log('%cDING DING DING!', 'color: #BADA55');
+        cornify_add(); // add unicorn
+      };
+    }
+
+    window.addEventListener('keyup', (evt) => {
+      recordKey(evt);
+      if (pressedKeys.size >= secretCode.length) checkKeyPresses();
+    });
+  </script>
+</body>
+
+</html>
